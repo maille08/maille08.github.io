@@ -35,7 +35,7 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
-        with:
+        with: ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true
           # Upload entire repository
           path: '.'
       - name: Deploy to GitHub Pages
