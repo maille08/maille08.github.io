@@ -50,6 +50,7 @@ body{
     border:none;
     border-radius:10px;
     padding:10px;
+    box-sizing:border-box;
 }
 
 .grid{
@@ -76,6 +77,11 @@ button:hover{
     color:white;
 }
 
+.backspace{
+    background:#ff6b6b;
+    color:white;
+}
+
 /* HISTORIQUE */
 .history{
     width:200px;
@@ -94,6 +100,7 @@ button:hover{
     padding:6px;
     cursor:pointer;
     border-bottom:1px solid gray;
+    font-size:12px;
 }
 
 .item:hover{
@@ -117,13 +124,13 @@ button:hover{
         <input id="screen" readonly>
 
         <div class="grid">
-            <button onclick="add('sin(')">sin</button>
-            <button onclick="add('cos(')">cos</button>
-            <button onclick="add('tan(')">tan</button>
+            <button onclick="add('Math.sin(')">sin</button>
+            <button onclick="add('Math.cos(')">cos</button>
+            <button onclick="add('Math.tan(')">tan</button>
             <button onclick="add('Math.PI')">π</button>
-            <button onclick="clearAll()">C</button>
+            <button class="backspace" onclick="backspace()">⌫</button>
 
-            <button onclick="add('log(')">log</button>
+            <button onclick="add('Math.log10(')">log</button>
             <button onclick="add('Math.log(')">ln</button>
             <button onclick="add('Math.sqrt(')">√</button>
             <button onclick="add('**')">^</button>
@@ -173,19 +180,18 @@ function clearAll(){
     screen.value = "";
 }
 
-function log(x){
-    return Math.log10(x);
+function backspace(){
+    screen.value = screen.value.slice(0, -1);
 }
 
 function calculate(){
     try{
         let expr = screen.value;
-        let result = eval(expr);
+        let result = Function('"use strict"; return (' + expr + ')')();
 
         addHistory(expr + " = " + result);
-
         screen.value = result;
-    }catch{
+    }catch(error){
         screen.value = "Erreur";
     }
 }
@@ -196,7 +202,7 @@ function addHistory(text){
     div.innerText = text;
 
     div.onclick = () => {
-        screen.value = text.split(" = ")[1];
+        screen.value = text.split(" = ")[0];
     };
 
     historyList.prepend(div);
