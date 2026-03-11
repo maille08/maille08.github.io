@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Calculatrice Math Pro</title>
+
+<style>
+:root{
+    --bg:#1e1e1e;
+    --box:#2b2b2b;
+    --text:white;
+}
+
+.light{
+    --bg:#f2f2f2;
+    --box:white;
+    --text:black;
+}
+
+body{
+    margin:0;
+    font-family:Arial;
+    background:var(--bg);
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.container{
+    display:flex;
+    gap:20px;
+}
+
+/* CALCULATRICE */
+.calc{
+    background:var(--box);
+    padding:20px;
+    border-radius:20px;
+    width:320px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+#screen{
+    width:100%;
+    height:60px;
+    font-size:22px;
+    margin-bottom:10px;
+    border:none;
+    border-radius:10px;
+    padding:10px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:6px;
+}
+
+button{
+    height:50px;
+    font-size:16px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.8;
+}
+
+.equal{
+    grid-column: span 3;
+    background:#4CAF50;
+    color:white;
+}
+
+/* HISTORIQUE */
+.history{
+    width:200px;
+    height:420px;
+    background:var(--box);
+    border-radius:20px;
+    padding:10px;
+    overflow-y:auto;
+}
+
+.history h3{
+    text-align:center;
+}
+
+.item{
+    padding:6px;
+    cursor:pointer;
+    border-bottom:1px solid gray;
+}
+
+.item:hover{
+    background:rgba(128,128,128,0.2);
+}
+
+.theme-btn{
+    margin-bottom:10px;
+    width:100%;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- CALCULATRICE -->
+    <div class="calc">
+        <button class="theme-btn" onclick="toggleTheme()">🌙 Thème</button>
+        <input id="screen" readonly>
+
+        <div class="grid">
+            <button onclick="add('sin(')">sin</button>
+            <button onclick="add('cos(')">cos</button>
+            <button onclick="add('tan(')">tan</button>
+            <button onclick="add('Math.PI')">π</button>
+            <button onclick="clearAll()">C</button>
+
+            <button onclick="add('log(')">log</button>
+            <button onclick="add('Math.log(')">ln</button>
+            <button onclick="add('Math.sqrt(')">√</button>
+            <button onclick="add('**')">^</button>
+            <button onclick="add('/')">÷</button>
+
+            <button onclick="add('7')">7</button>
+            <button onclick="add('8')">8</button>
+            <button onclick="add('9')">9</button>
+            <button onclick="add('*')">×</button>
+            <button onclick="add('%')">%</button>
+
+            <button onclick="add('4')">4</button>
+            <button onclick="add('5')">5</button>
+            <button onclick="add('6')">6</button>
+            <button onclick="add('-')">−</button>
+            <button onclick="add('(')">(</button>
+
+            <button onclick="add('1')">1</button>
+            <button onclick="add('2')">2</button>
+            <button onclick="add('3')">3</button>
+            <button onclick="add('+')">+</button>
+            <button onclick="add(')')">)</button>
+
+            <button onclick="add('0')">0</button>
+            <button onclick="add('.')">.</button>
+            <button class="equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <!-- HISTORIQUE -->
+    <div class="history">
+        <h3>Historique</h3>
+        <div id="historyList"></div>
+    </div>
+
+</div>
+
+<script>
+const screen = document.getElementById("screen");
+const historyList = document.getElementById("historyList");
+
+function add(v){
+    screen.value += v;
+}
+
+function clearAll(){
+    screen.value = "";
+}
+
+function log(x){
+    return Math.log10(x);
+}
+
+function calculate(){
+    try{
+        let expr = screen.value;
+        let result = eval(expr);
+
+        addHistory(expr + " = " + result);
+
+        screen.value = result;
+    }catch{
+        screen.value = "Erreur";
+    }
+}
+
+function addHistory(text){
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerText = text;
+
+    div.onclick = () => {
+        screen.value = text.split(" = ")[1];
+    };
+
+    historyList.prepend(div);
+}
+
+function toggleTheme(){
+    document.body.classList.toggle("light");
+}
+</script>
+
+</body>
+</html>
